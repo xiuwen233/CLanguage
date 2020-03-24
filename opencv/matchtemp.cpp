@@ -26,3 +26,21 @@ Mat  MatchTempleImage(Mat src, Mat temple, int matchtype )
 	return src;
 
 }
+
+//汉明距离0 相似度很高 <5较高 >5差异比较大
+Mat calPHashCode(Mat image)
+{
+	Mat floatImage, imageDct;
+	resize(image, image, Size(32, 32));
+	image.convertTo(floatImage, CV_32FC1);
+	dct(floatImage, imageDct);
+	Rect roi(0, 0, 8, 8);
+	Scalar imageMean = mean(imageDct(roi));
+	return (imageDct(roi) > imageMean[0]);
+}
+
+int calHammingDistance(Mat modelHashCode, Mat testHashCode)
+{
+	return countNonZero(modelHashCode != testHashCode);
+}
+
